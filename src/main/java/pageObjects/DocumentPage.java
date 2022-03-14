@@ -6,6 +6,9 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -52,12 +55,14 @@ public class DocumentPage {
     @Step("Scroll To Last Found Result")
     public DocumentPage scrollToLastFoundResult() {
         int countBeforeScroll, countAfterScroll;
+        LocalTime startTime = LocalTime.now();
 
         do {
             countBeforeScroll = foundResults.size();
             foundResults.last().scrollIntoView(true);
             countAfterScroll = foundResults.size();
-        } while (countBeforeScroll != countAfterScroll);
+        } while (countBeforeScroll != countAfterScroll &&
+                LocalTime.now().isBefore(startTime.plus(Duration.ofSeconds(20))));
 
         return this;
     }
